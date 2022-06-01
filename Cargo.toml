@@ -1,0 +1,21 @@
+[package]
+name = "cells"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[workspace]
+members = [
+  "cmd/cellsd",
+  "common/api_version",
+  "common/engine",
+  "common/cells_types",
+  "common/cells_utils",
+]
+default-members = ["cmd/cellsd"]
+
+[dependencies]
+api_version = {path = "common/api_version"}
+cells_engine = {path = "common/engine"}
+cells_utils = {path = "common/cells_utils"}
+cells_types = {path = "common/cells_types"}

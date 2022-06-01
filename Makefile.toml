@@ -1,0 +1,50 @@
+
+[tasks.format]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--", "--emit=files"]
+
+[config]
+default_to_workspace = false
+skip_core_tasks = true
+skip_git_env_info = true
+skip_rust_env_info = false
+skip_crate_env_info = true
+
+[tasks.clean]
+description = "Clean Rust targets"
+command = "cargo"
+args = ["clean"]
+
+[tasks.b]
+alias = "build"
+
+[tasks.build]
+command = "cargo"
+args = ["build"]
+dependencies = ["clean"]
+
+[tasks.test]
+description = "Run unit tests"
+install_crate = "cargo-nextest"
+command = "cargo"
+args = ["nextest", "run", "--workspace"]
+dependencies = ["clean"]
+# script = '''
+# #!@shell
+
+# set -e
+
+# cargo nextest run --workspace
+# '''
+
+[tasks.docs]
+description = "Build Rust docs"
+command = "cargo"
+args = ["doc", "--workspace", "--no-deps", "--document-private-items"]
+
+[tasks.ci]
+alias = "cells-flow"
+
+[tasks.cells-flow]
+dependencies = ["format", "build", "test"]
