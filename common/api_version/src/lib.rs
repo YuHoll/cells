@@ -142,6 +142,7 @@ mod tests {
         assert_eq!(v1.unwrap().ts, Some(1654045749000));
         assert_eq!(v1.unwrap().status.user_status(), 123u64.into());
         assert_eq!(v1.unwrap().tombstone, true);
+        assert!(!v1.unwrap().is_valid());
 
         // Test Null Value
 
@@ -160,5 +161,6 @@ mod tests {
         assert_eq!(v1.unwrap().user_value, b"".to_vec());
         assert_eq!(v1.unwrap().ts, Some(0));
         assert_eq!(v1.unwrap().status, 0u64.into());
+        assert!(v1.unwrap().is_valid());
     }
 }
