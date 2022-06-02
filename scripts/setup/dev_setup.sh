@@ -24,6 +24,7 @@ function install_toolchain {
     rustup install "$version"
     rustup set profile minimal
     rustup component add llvm-tools-preview
+    rustup component add clippy
     rustup default "$version"
 }
 

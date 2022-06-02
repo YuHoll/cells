@@ -1,4 +1,3 @@
-
 #[derive(Eq, PartialEq, Ord, PartialOrd, Hash, Clone)]
 pub struct Key(Vec<u8>);
 
@@ -7,7 +6,7 @@ pub type Value = Vec<u8>;
 
 /// Key-value pair type.
 ///
-/// The value is simply raw bytes; 
+/// The value is simply raw bytes;
 pub type KvPair = (Vec<u8>, Value);
 
 impl Key {
@@ -26,8 +25,6 @@ impl Key {
         self.0
     }
 }
-
-
 
 #[cfg(test)]
 mod tests {

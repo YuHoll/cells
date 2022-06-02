@@ -1,4 +1,3 @@
-
 use byteorder::{BigEndian, ByteOrder, LittleEndian, WriteBytesExt};
 use snafu::{ResultExt, Snafu};
 
@@ -47,7 +46,6 @@ pub enum Error {
 pub type Result<T, E = Error> = std::result::Result<T, E>;
 
 pub trait NumberEncoder: Write {
-
     fn encode_i64(&mut self, v: i64) -> Result<()> {
         let u = order_encode_i64(v);
         self.encode_u64(u)
@@ -64,25 +62,29 @@ pub trait NumberEncoder: Write {
     }
 
     fn encode_u32(&mut self, v: u32) -> Result<()> {
-        self.write_u32::<BigEndian>(v).context(EncoderNumberFailSnafu)
+        self.write_u32::<BigEndian>(v)
+            .context(EncoderNumberFailSnafu)
     }
 
     fn encode_i32(&mut self, v: i32) -> Result<()> {
-        self.write_i32::<LittleEndian>(v).context(EncoderNumberFailSnafu)
+        self.write_i32::<LittleEndian>(v)
+            .context(EncoderNumberFailSnafu)
     }
 
     fn encode_f32(&mut self, v: f32) -> Result<()> {
-        self.write_f32::<LittleEndian>(v).context(EncoderNumberFailSnafu)
+        self.write_f32::<LittleEndian>(v)
+            .context(EncoderNumberFailSnafu)
     }
 
     fn encode_u16(&mut self, v: u16) -> Result<()> {
-        self.write_u16::<BigEndian>(v).context(EncoderNumberFailSnafu)
+        self.write_u16::<BigEndian>(v)
+            .context(EncoderNumberFailSnafu)
     }
 
     fn encode_i16(&mut self, v: i16) -> Result<()> {
-        self.write_i16::<LittleEndian>(v).context(EncoderNumberFailSnafu)
+        self.write_i16::<LittleEndian>(v)
+            .context(EncoderNumberFailSnafu)
     }
-
 }
 
 impl<T: Write> NumberEncoder for T {}
@@ -139,7 +141,6 @@ pub fn decode_u16(data: &mut &[u8]) -> Result<u16> {
 pub fn decode_i16(data: &mut &[u8]) -> Result<i16> {
     read_num_bytes(mem::size_of::<i16>(), data, LittleEndian::read_i16)
 }
-
 
 #[cfg(test)]
 mod tests {

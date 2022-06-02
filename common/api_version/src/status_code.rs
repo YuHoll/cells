@@ -5,13 +5,11 @@ bitflags! {
     pub struct StatusCode: u64 {
 
         // Mask for the status code section
-        const SYSTEM_STATUS_MASK = 0xffff_ffff_0000_0000;
+        const SYSTEM_STATUS_MASK = 0xff00_0000_0000_0000;
         // Mask for the bits section
-        const USER_STATUS_MASK = 0x0000_0000_ffff_ffff;
+        const USER_STATUS_MASK = 0x00ff_ffff_ffff_ffff;
 
-        // Flag for an error / uncertain code
-        const IS_ERROR                = 0x8000_0000_0000_0000;
-        const IS_UNCERTAIN            = 0x4000_0000_0000_0000;
+        const IS_TOMBSTONE                = 0x8000_0000_0000_0000;
 
         const GOOD = 0;
     }
@@ -27,24 +25,14 @@ impl StatusCode {
         *self & StatusCode::SYSTEM_STATUS_MASK
     }
 
-    /// Tests if the status code is bad
-    pub fn is_bad(&self) -> bool {
-        self.contains(StatusCode::IS_ERROR)
+    /// Tests if the status code is tombstone
+    pub fn is_tombstone(&self) -> bool {
+        self.contains(StatusCode::IS_TOMBSTONE)
     }
 
-    /// Tests if the status code is uncertain
-    pub fn is_uncertain(&self) -> bool {
-        self.contains(StatusCode::IS_UNCERTAIN)
-    }
-
-    /// Tests if the status code is good (i.e. not bad or uncertain)
-    pub fn is_good(&self) -> bool {
-        !self.is_bad() && !self.is_uncertain()
-    }
-
-    /// Clear User status code
-    pub fn clear(&mut self) {
-        *self = *self & StatusCode::SYSTEM_STATUS_MASK;
+    /// Valid user status is 56 bytes, The first 8 bytes are system meta data
+    pub fn from_user_status(value: u64) -> Self {
+        StatusCode { bits: value } & StatusCode::USER_STATUS_MASK
     }
 }
 
@@ -83,13 +71,9 @@ mod tests {
     fn status_code() {
         let s = StatusCode::default();
         assert_eq!(s, StatusCode::GOOD);
-        assert!(s.is_good());
 
-        let s = StatusCode::IS_ERROR;
-        assert!(s.is_bad());
-
-        let s: StatusCode = StatusCode::IS_UNCERTAIN;
-        assert!(s.is_uncertain())
+        let s = StatusCode::IS_TOMBSTONE;
+        assert!(s.is_tombstone());
     }
 
     #[test]

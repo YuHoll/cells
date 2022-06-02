@@ -1,15 +1,21 @@
 
-[tasks.format]
-install_crate = "rustfmt"
-command = "cargo"
-args = ["fmt", "--", "--emit=files"]
-
 [config]
 default_to_workspace = false
 skip_core_tasks = true
 skip_git_env_info = true
 skip_rust_env_info = false
 skip_crate_env_info = true
+
+[tasks.fmt]
+install_crate = "rustfmt"
+command = "cargo"
+args = ["fmt", "--", "--emit=files"]
+
+[tasks.lint]
+install_crate = "clippy"
+command = "cargo"
+args = ["clippy", "--tests", "--", "-D", "warnings"]
+dependencies = ["fmt"]
 
 [tasks.clean]
 description = "Clean Rust targets"
@@ -47,4 +53,4 @@ args = ["doc", "--workspace", "--no-deps", "--document-private-items"]
 alias = "cells-flow"
 
 [tasks.cells-flow]
-dependencies = ["format", "build", "test"]
+dependencies = ["lint", "build", "test"]
